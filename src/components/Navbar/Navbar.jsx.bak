@@ -1,0 +1,68 @@
+import React, { useState, useEffect, useContext } from 'react';
+import Style from './Navbar.module.css';
+import logo from '../../assets/images/freshcart-logo.svg';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { CounterContext } from '../../Context/CounterContext';
+import { UserContext } from '../../Context/UserContext';
+import { CartContext } from '../../Context/CartContext';
+import { FaShoppingCart } from 'react-icons/fa';
+
+export default function Navbar() {
+  const {cartItems} = useContext(CartContext);
+
+  let navigate = useNavigate();
+  let {userLogin, setUserLogin} = useContext(UserContext);
+
+  function logOut() {
+    localStorage.removeItem('userToken');
+    setUserLogin(null);
+    navigate('/login');
+  }
+
+  useEffect(() => {
+
+  }, []);
+  return <>
+    <nav className='bg-nav lg:fixed top-0 left-0 right-0 z-50 text-center'> 
+      <div className="container mx-auto py-2 flex flex-col lg:flex-row justify-between items-center">
+        <div className='flex flex-col lg:flex-row items-center'>
+          <NavLink to='/'><img src={logo} width={175} alt="Frech Cart Logo" /></NavLink>
+          <ul className='flex flex-col lg:flex-row justify-around m-0 items-center ml-5'>
+            {
+              userLogin !== null ? <>
+                <li className='py-3'><NavLink className='text-lg mx-2 text-slate-900 font-extralight' to='/'>Home</NavLink></li>
+                <li className='py-3'><NavLink className='text-lg mx-2 text-slate-900 font-extralight' to='/cart'>Cart</NavLink></li>
+                <li className='py-3'><NavLink className='text-lg mx-2 text-slate-900 font-extralight' to='/products'>Products</NavLink></li>
+                {/* <li className='py-2'><NavLink className='text-lg mx-2 text-slat-900 font-light' to='/brands'>Brands</NavLink></li>
+                <li className='py-2'><NavLink className='text-lg mx-2 text-slat-900 font-light' to='/categories'>Categories</NavLink></li> */}
+              </> : null
+            }
+          </ul>
+        </div>
+        <ul className='flex flex-col lg:flex-row justify-around m-0 items-center ml-5'>
+          {
+            userLogin == null ? <>
+              <li className='py-2'><NavLink className='text-lg mx-2 text-slat-900 font-extralight' to='/login'>Login</NavLink></li>
+              <li className='py-2'><NavLink className='text-lg mx-2 text-slat-900 font-extralight' to='/register'>Register</NavLink></li>
+          </> : <>
+            <li onClick={logOut} className='py-2'><span className='text-lg mx-2 text-slat-900 font-extralight cursor-pointer' to='/'>Logout</span></li>
+            <li>
+              <NavLink className='text-lg mx-2 text-slat-900 font-extralight cursor-pointer relative' to='/cart'>
+                <i className='fas fa-shopping-cart fa-xl text-black my-1 px-1'></i>
+                {cartItems > 0 ? <span className='bg-main text-white text-sm font-medium absolute top-0 end-0 translate-x-1/2 -translate-y-1/2 rounded-lg px-2 py-0.5'>{cartItems}</span> : null}
+              </NavLink>
+            </li>
+          </>
+          }
+          <li className='flex items-center py-4 ml-4'>
+            <Link><i className="fab fa-facebook mx-2 fa-lg"></i></Link>
+            <Link><i className="fab fa-twitter mx-2 fa-lg"></i></Link>
+            <Link><i className="fab fa-instagram mx-2 fa-lg"></i></Link>
+            <Link><i className="fab fa-youtube mx-2 fa-lg"></i></Link>
+            <Link><i className="fab fa-tiktok mx-2 fa-lg"></i></Link>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </>
+}
